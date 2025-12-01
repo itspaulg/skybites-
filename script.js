@@ -20,7 +20,20 @@ function pushEvent(label) {
 trackedButtons.forEach(({ id, label }) => {
   const el = document.getElementById(id);
   if (!el) return;
-  el.addEventListener("click", () => pushEvent(label));
+  el.addEventListener("click", (event) => {
+    const wantsNewTab = event.metaKey || event.ctrlKey;
+    if (wantsNewTab) {
+      pushEvent(label);
+      return;
+    }
+
+    event.preventDefault();
+    pushEvent(label);
+
+    setTimeout(() => {
+      window.location.href = el.href;
+    }, 300);
+  });
 });
 
 console.log("SkyBites landing page loaded — GTM events ready");
